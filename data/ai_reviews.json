@@ -1,0 +1,31 @@
+﻿{
+    "value":  [
+                  {
+                      "id":  "8aec7c64b7bf4a8084d28e9080b79b3a",
+                      "user_id":  2,
+                      "filename":  "2aOboQykQZlUURhkg7riuiNnoEcIfQUgEW8od9GK.jpg",
+                      "content_type":  "image/jpeg",
+                      "image_path":  "data\\ai_uploads\\8aec7c64b7bf4a8084d28e9080b79b3a.jpg",
+                      "created_at":  "2026-09-15T04:34:43.120480Z",
+                      "status":  "rejected",
+                      "suggestion":  {
+
+                                     },
+                      "message":  "KhĂ´ng thá»ƒ phĂ¢n tĂ­ch áº£nh tá»± Ä‘á»™ng: 429 Client Error: Too Many Requests for url: https://api.openai.com/v1/chat/completions"
+                  },
+                  {
+                      "id":  "afb8ab6f4b6a446ab4d405cff279ccab",
+                      "user_id":  2,
+                      "filename":  "receipt.png",
+                      "content_type":  "image/png",
+                      "image_path":  "data\\ai_uploads\\afb8ab6f4b6a446ab4d405cff279ccab.png",
+                      "created_at":  "2026-09-15T04:45:28.328201Z",
+                      "status":  "pending",
+                      "suggestion":  {
+
+                                     },
+                      "message":  "KhĂ´ng thá»ƒ phĂ¢n tĂ­ch áº£nh tá»± Ä‘á»™ng: 429 Client Error: Too Many Requests for url: https://api.openai.com/v1/chat/completions"
+                  }
+              ],
+    "Count":  2
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý tài chính cá nhân</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="/static/app.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <div>
+          <p class="brand-line"><span class="logo-mark" aria-hidden="true">$</span><span>Quản lý tài chính cá nhân</span></p>
+          <h1>Tổng quan tài chính</h1>
+          <p id="welcome-user" class="welcome-user">Xin chào</p>
+        </div>
+        <div class="header-actions">
+          <button id="refresh-btn" class="secondary">Làm mới</button>
+          <button id="report-btn" class="secondary">Báo cáo</button>
+          <button id="theme-btn" class="ghost">Dark mode</button>
+          <button id="export-btn" class="ghost">Xuất CSV</button>
+          <label class="file-btn ghost">Import JSON<input id="import-input" type="file" accept="application/json,.json" hidden /></label>
+          <button id="logout-btn" class="ghost">Đăng xuất</button>
+        </div>
+      </header>
+
+      <section class="panel summary-grid">
+        <article class="card accent-blue">
+          <span class="label">Tổng chi tiêu</span>
+          <strong id="total-expense">0</strong>
+        </article>
+        <article class="card accent-green">
+          <span class="label">Tháng hiện tại</span>
+          <strong id="current-month-total">0</strong>
+        </article>
+        <article class="card accent-amber">
+          <span class="label">Số giao dịch</span>
+          <strong id="transaction-count">0</strong>
+        </article>
+        <article class="card accent-rose">
+          <span class="label">Danh mục lớn nhất</span>
+          <strong id="top-category">Chưa có</strong>
+        </article>
+      </section>
+
+      <section id="report-panel" class="panel report-panel">
+        <div class="section-head"><h2>Báo cáo thực tế</h2><button id="today-filter" class="secondary">Hôm nay</button></div>
+        <div class="report-grid">
+          <div><span class="label">Mức chi trung bình</span><strong id="average-expense">0 ₫</strong></div>
+          <div><span class="label">Khoản chi lớn nhất</span><strong id="largest-expense">0 ₫</strong></div>
+          <div><span class="label">Tổng danh mục dẫn đầu</span><strong id="top-category-total">0 ₫</strong></div>
+        </div>
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="section-head">
+          <h2>Biểu đồ theo danh mục</h2>
+        </div>
+        <div class="chart-card">
+          <canvas id="category-chart"></canvas>
+        </div>
+      </section>
+
+      <section class="panel analytics-grid">
+        <div>
+          <div class="section-head"><h2>Theo tháng</h2></div>
+          <div class="small-chart"><canvas id="monthly-chart"></canvas></div>
+        </div>
+        <div>
+          <div class="section-head"><h2>Theo năm</h2></div>
+          <div class="small-chart"><canvas id="yearly-chart"></canvas></div>
+        </div>
+      </section>
+
+      <section class="panel form-panel">
+        <h2>Thêm khoản chi</h2>
+        <form id="expense-form">
+          <input type="hidden" name="id" id="expense-id" />
+          <div class="form-grid">
+            <label>
+              Số tiền
+              <input type="number" name="amount" min="0" step="0.01" required />
+            </label>
+            <label>
+              Danh mục
+              <input type="text" name="category" placeholder="Ví dụ: Ăn uống" required />
+            </label>
+            <label>
+              Ngày
+              <input type="date" name="expense_date" required />
+            </label>
+          </div>
+          <label>
+            Mô tả
+            <input type="text" name="description" placeholder="Mô tả chi tiết" required />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="primary" id="submit-btn">Lưu chi tiêu</button>
+            <button type="button" class="secondary" id="cancel-edit" hidden>Huỷ sửa</button>
+          </div>
+        </form>
+        <p id="form-status" class="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel ai-panel">
+        <div class="section-head"><div><p class="eyebrow">AI hỗ trợ</p><h2>Nhập từ ảnh hóa đơn</h2></div><span class="review-badge">Luôn cần duyệt</span></div>
+        <p class="muted-copy">Ảnh và đề xuất được lưu riêng. Chỉ nút Duyệt mới tạo giao dịch.</p>
+        <div class="ai-controls">
+          <label class="file-btn primary">Chọn ảnh hóa đơn<input id="receipt-input" type="file" accept="image/jpeg,image/png,image/webp" hidden /></label>
+          <button id="refresh-reviews" class="secondary">Tải hàng chờ</button>
+        </div>
+        <p id="ai-status" class="status" aria-live="polite"></p>
+        <div id="review-list" class="review-list"><p class="empty">Chưa có ảnh chờ duyệt.</p></div>
+        <div class="llm-box"><label for="llm-prompt">Trợ lý LLM</label><textarea id="llm-prompt" rows="3" maxlength="4000" placeholder="Hỏi về cách phân loại hoặc lập kế hoạch chi tiêu"></textarea><button id="llm-btn" class="secondary">Gửi cho LLM</button><pre id="llm-result" class="llm-result"></pre></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head"><h2>Danh sách chi tiêu</h2></div>
+        <div class="filters">
+          <input id="filter-keyword" type="search" placeholder="Tìm mô tả hoặc danh mục" />
+          <input id="filter-category" type="text" placeholder="Lọc danh mục" />
+          <input id="filter-start" type="date" />
+          <input id="filter-end" type="date" />
+          <button id="clear-filters" class="secondary">Xoá lọc</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Ngày</th>
+                <th>Danh mục</th>
+                <th>Mô tả</th>
+                <th>Số tiền</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="expense-list">
+              <tr>
+                <td colspan="5" class="empty">Đang tải dữ liệu...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="admin-panel" class="panel" hidden>
+        <div class="section-head"><h2>Quản trị người dùng</h2><button id="refresh-users" class="secondary">Làm mới</button></div>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Tài khoản</th><th>Vai trò</th><th>Thao tác</th></tr></thead><tbody id="user-list"></tbody></table></div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "amount": 50000.0,
+        "category": "ăn uống",
+        "description": "cơm trưa",
+        "date": "2026-09-14"
+    },
+    {
+        "id": 2,
+        "user_id": 1,
+        "amount": 1000000.0,
+        "category": "mua đồ",
+        "description": "mua đồng hồ",
+        "date": "2026-09-09"
+    }
+]

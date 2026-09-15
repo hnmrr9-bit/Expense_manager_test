@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.py[cod]
+.venv/
+data/expense.db
+data/ai_uploads/

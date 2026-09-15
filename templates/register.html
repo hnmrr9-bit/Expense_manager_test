@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký | Quản lý tài chính cá nhân</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script defer src="/static/auth.js"></script>
+  </head>
+  <body class="auth-page" data-mode="register">
+    <main class="auth-shell">
+      <section class="auth-card">
+        <p class="brand-line"><span class="logo-mark" aria-hidden="true">$</span><span>Quản lý tài chính cá nhân</span></p>
+        <h1>Đăng ký</h1>
+        <form id="auth-form" class="auth-form">
+          <label>
+            Tên đăng nhập
+            <input type="text" name="username" placeholder="Nhập tên đăng nhập" required />
+          </label>
+          <label>
+            Mật khẩu
+            <input type="password" name="password" placeholder="Nhập mật khẩu" required />
+          </label>
+          <button type="submit" class="primary auth-submit">Tạo tài khoản</button>
+        </form>
+        <p id="auth-status" class="status" aria-live="polite"></p>
+        <p class="auth-link">
+          Đã có tài khoản?
+          <a href="/login">Đăng nhập</a>
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
