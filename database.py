@@ -33,15 +33,60 @@ class Database:
                 category TEXT NOT NULL,
                 description TEXT,
                 expense_date TEXT NOT NULL,
-
+                is_recurring INTEGER NOT NULL DEFAULT 0,
+                recurring_frequency TEXT DEFAULT 'monthly',
+                tags TEXT DEFAULT '',
+                currency TEXT DEFAULT 'VND',
                 FOREIGN KEY (user_id)
                 REFERENCES users(id)
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS category_budgets (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                category TEXT NOT NULL,
+                budget_amount REAL NOT NULL,
+                currency TEXT NOT NULL DEFAULT 'VND',
+                UNIQUE(user_id, category, currency)
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS user_settings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL UNIQUE,
+                default_currency TEXT NOT NULL DEFAULT 'VND',
+                theme TEXT NOT NULL DEFAULT 'blue',
+                last_backup_at TEXT,
+                refresh_token TEXT
             )
         """)
 
         user_columns = [row[1] for row in cursor.execute("PRAGMA table_info(users)").fetchall()]
         if "role" not in user_columns:
             cursor.execute("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'")
+
+        expense_columns = [row[1] for row in cursor.execute("PRAGMA table_info(expenses)").fetchall()]
+        for column_name, default_sql in {
+            "is_recurring": "INTEGER NOT NULL DEFAULT 0",
+            "recurring_frequency": "TEXT DEFAULT 'monthly'",
+            "tags": "TEXT DEFAULT ''",
+            "currency": "TEXT DEFAULT 'VND'",
+        }.items():
+            if column_name not in expense_columns:
+                cursor.execute(f"ALTER TABLE expenses ADD COLUMN {column_name} {default_sql}")
+
+        settings_columns = [row[1] for row in cursor.execute("PRAGMA table_info(user_settings)").fetchall()]
+        for column_name, default_sql in {
+            "default_currency": "TEXT NOT NULL DEFAULT 'VND'",
+            "theme": "TEXT NOT NULL DEFAULT 'blue'",
+            "last_backup_at": "TEXT",
+            "refresh_token": "TEXT",
+        }.items():
+            if column_name not in settings_columns:
+                cursor.execute(f"ALTER TABLE user_settings ADD COLUMN {column_name} {default_sql}")
 
         connection.commit()
         connection.close()

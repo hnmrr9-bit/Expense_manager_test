@@ -14,7 +14,11 @@ class Expense:
         amount,
         category,
         description,
-        expense_date
+        expense_date,
+        is_recurring=0,
+        recurring_frequency='monthly',
+        tags='',
+        currency='VND'
     ):
         self.expense_id = expense_id
         self.user_id = user_id
@@ -22,12 +26,13 @@ class Expense:
         self.category = category
         self.description = description
         self.expense_date = expense_date
+        self.is_recurring = bool(is_recurring)
+        self.recurring_frequency = recurring_frequency or 'monthly'
+        self.tags = tags or ''
+        self.currency = currency or 'VND'
 
     def to_dict(self):
-        """
-        Chuyển đối tượng Expense thành Dictionary.
-        Dictionary sẽ được dùng khi export dữ liệu sang JSON.
-        """
+        """Chuyển đối tượng Expense thành Dictionary."""
 
         return {
             "id": self.expense_id,
@@ -35,5 +40,9 @@ class Expense:
             "amount": self.amount,
             "category": self.category,
             "description": self.description,
-            "date": self.expense_date
+            "date": self.expense_date,
+            "is_recurring": self.is_recurring,
+            "recurring_frequency": self.recurring_frequency,
+            "tags": self.tags,
+            "currency": self.currency,
         }

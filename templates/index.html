@@ -4,98 +4,117 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý tài chính cá nhân</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script defer src="/static/app.js"></script>
   </head>
   <body>
-    <main class="container">
-      <header class="header">
-        <div>
-          <p class="brand-line"><span class="logo-mark" aria-hidden="true">$</span><span>Quản lý tài chính cá nhân</span></p>
-          <h1>Tổng quan tài chính</h1>
-          <p id="welcome-user" class="welcome-user">Xin chào</p>
-        </div>
-        <div class="header-actions">
-          <button id="refresh-btn" class="secondary">Làm mới</button>
-          <button id="report-btn" class="secondary">Báo cáo</button>
-          <button id="theme-btn" class="ghost">Dark mode</button>
-          <button id="export-btn" class="ghost">Xuất CSV</button>
-          <label class="file-btn ghost">Import JSON<input id="import-input" type="file" accept="application/json,.json" hidden /></label>
-          <button id="logout-btn" class="ghost">Đăng xuất</button>
-        </div>
-      </header>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span class="logo-mark" aria-hidden="true">$</span><span>Expense Manager</span></div>
+      <nav class="sidebar-nav" aria-label="Điều hướng chính">
+        <a class="nav-link active" href="#overview"><i data-lucide="layout-dashboard"></i><span>Tổng quan</span></a>
+        <a class="nav-link" href="#transactions"><i data-lucide="receipt-text"></i><span>Giao dịch</span></a>
+        <a class="nav-link" href="#reports"><i data-lucide="chart-no-axes-combined"></i><span>Báo cáo</span></a>
+        <a class="nav-link" href="#ai-tools"><i data-lucide="scan-line"></i><span>AI hỗ trợ</span></a>
+        <a class="nav-link" href="/settings"><i data-lucide="settings-2"></i><span>Cài đặt</span></a>
+      </nav>
+      <div class="sidebar-user"><span class="sidebar-user-avatar" id="sidebar-avatar">D</span><div><strong id="sidebar-user-name">demo</strong><span>Tài khoản cá nhân</span></div><i data-lucide="chevron-right"></i></div>
+      <div class="sidebar-footer"><i data-lucide="shield-check"></i><span>Dữ liệu riêng tư</span></div>
+    </aside>
 
-      <section class="panel summary-grid">
-        <article class="card accent-blue">
-          <span class="label">Tổng chi tiêu</span>
-          <strong id="total-expense">0</strong>
-        </article>
-        <article class="card accent-green">
-          <span class="label">Tháng hiện tại</span>
-          <strong id="current-month-total">0</strong>
-        </article>
-        <article class="card accent-amber">
-          <span class="label">Số giao dịch</span>
-          <strong id="transaction-count">0</strong>
-        </article>
-        <article class="card accent-rose">
-          <span class="label">Danh mục lớn nhất</span>
-          <strong id="top-category">Chưa có</strong>
-        </article>
-      </section>
+    <main class="container app-shell">
+      <div class="mobile-topbar"><button id="sidebar-toggle" class="icon-button" aria-label="Mở menu"><i data-lucide="menu"></i></button><span>Expense Manager</span></div>
+      <div class="dashboard-layout">
+        <div class="dashboard-main">
+          <header class="header">
+            <div>
+              <p class="brand-line"><span class="logo-mark" aria-hidden="true">$</span><span>Expense Manager</span></p>
+              <h1>Tổng quan tài chính</h1>
+              <p id="welcome-user" class="welcome-user">Xin chào</p>
+            </div>
+            <div class="header-actions">
+              <button id="refresh-btn" class="icon-button" title="Làm mới"><i data-lucide="refresh-cw"></i></button>
+              <div class="account-menu-wrap"><button id="account-btn" class="account-button"><span id="avatar-initial">D</span><span id="account-name">demo</span><i data-lucide="chevron-down"></i></button><div id="account-menu" class="account-menu" hidden><a href="/settings"><i data-lucide="settings-2"></i> Cài đặt</a><button id="logout-btn"><i data-lucide="log-out"></i> Đăng xuất</button></div></div>
+            </div>
+          </header>
 
-      <section id="report-panel" class="panel report-panel">
-        <div class="section-head"><h2>Báo cáo thực tế</h2><button id="today-filter" class="secondary">Hôm nay</button></div>
-        <div class="report-grid">
-          <div><span class="label">Mức chi trung bình</span><strong id="average-expense">0 ₫</strong></div>
-          <div><span class="label">Khoản chi lớn nhất</span><strong id="largest-expense">0 ₫</strong></div>
-          <div><span class="label">Tổng danh mục dẫn đầu</span><strong id="top-category-total">0 ₫</strong></div>
-        </div>
-      </section>
+          <section id="overview" class="summary-grid section-anchor">
+            <article class="card stat-card stat-spend"><div class="stat-card-top"><span class="label">Tổng chi tiêu</span><span class="stat-icon"><i data-lucide="wallet-cards"></i></span></div><strong id="total-expense">0 ₫</strong><span class="stat-trend negative"><i data-lucide="trending-down"></i> Theo dõi dòng tiền</span></article>
+            <article class="card stat-card stat-income"><div class="stat-card-top"><span class="label">Thu nhập tháng này</span><span class="stat-icon"><i data-lucide="circle-arrow-down"></i></span></div><strong id="monthly-income">Chưa cập nhật</strong><span class="stat-trend positive"><i data-lucide="trending-up"></i> Đang chờ dữ liệu</span></article>
+            <article class="card stat-card stat-count"><div class="stat-card-top"><span class="label">Số giao dịch</span><span class="stat-icon"><i data-lucide="list-checks"></i></span></div><strong id="transaction-count">0</strong><span class="stat-trend neutral"><i data-lucide="activity"></i> Giao dịch đã ghi nhận</span></article>
+            <article class="card stat-card stat-balance"><div class="stat-card-top"><span class="label">Số dư hiện tại</span><span class="stat-icon"><i data-lucide="credit-card"></i></span></div><strong id="current-balance">Chưa cập nhật</strong><span class="stat-trend positive"><i data-lucide="shield-check"></i> Số dư an toàn</span></article>
+          </section>
 
-      <section class="panel chart-panel">
-        <div class="section-head">
-          <h2>Biểu đồ theo danh mục</h2>
-        </div>
-        <div class="chart-card">
-          <canvas id="category-chart"></canvas>
-        </div>
-      </section>
+          <section id="reports" class="chart-grid section-anchor">
+            <article class="panel chart-panel chart-panel-line"><div class="section-head"><div><span class="eyebrow">Dòng tiền</span><h2>Xu hướng chi tiêu theo tháng</h2></div><button id="today-filter" class="secondary">Hôm nay</button></div><div class="chart-card"><canvas id="monthly-chart"></canvas></div></article>
+            <article class="panel chart-panel chart-panel-donut"><div class="section-head"><div><span class="eyebrow">Phân bổ</span><h2>Chi tiêu theo danh mục</h2></div><i class="chart-heading-icon" data-lucide="pie-chart"></i></div><div class="chart-card"><canvas id="category-chart"></canvas></div></article>
+          </section>
 
-      <section class="panel analytics-grid">
-        <div>
-          <div class="section-head"><h2>Theo tháng</h2></div>
-          <div class="small-chart"><canvas id="monthly-chart"></canvas></div>
+          <section id="report-panel" class="panel report-panel section-anchor"><div class="section-head"><h2>Tóm tắt báo cáo</h2></div><div class="report-grid"><div><span class="label">Mức chi trung bình</span><strong id="average-expense">0 ₫</strong></div><div><span class="label">Khoản chi lớn nhất</span><strong id="largest-expense">0 ₫</strong></div><div><span class="label">Danh mục dẫn đầu</span><strong id="top-category">Chưa có</strong><small id="top-category-total">0 ₫</small></div></div></section>
         </div>
-        <div>
-          <div class="section-head"><h2>Theo năm</h2></div>
-          <div class="small-chart"><canvas id="yearly-chart"></canvas></div>
-        </div>
-      </section>
 
-      <section class="panel form-panel">
-        <h2>Thêm khoản chi</h2>
+        <aside class="dashboard-rail" aria-label="Tóm tắt nhanh">
+          <div class="rail-header"><span>Tháng 09, 2026</span><i data-lucide="calendar-days"></i></div>
+          <div class="rail-profile"><span class="rail-avatar" id="rail-avatar">D</span><div><strong id="rail-user">demo</strong><span>Quản lý cá nhân</span></div><i data-lucide="more-horizontal"></i></div>
+          <div class="rail-section"><div class="rail-section-title"><span>Ngân sách tháng</span><i data-lucide="target"></i></div><strong id="budget-progress-label">Chưa thiết lập</strong><div class="progress-track"><span id="budget-progress-bar"></span></div><p id="forecast-insight">Đang tính toán...</p></div>
+          <div class="rail-section"><div class="rail-section-title"><span>Điểm nổi bật</span><i data-lucide="sparkles"></i></div><p id="trend-insight">Đang phân tích...</p><p id="advice-insight">Theo dõi danh mục chính</p></div>
+          <div class="rail-section rail-actions"><span class="rail-section-title">Thao tác nhanh</span><a href="#transactions" class="quick-action"><i data-lucide="plus"></i><span>Thêm giao dịch</span></a><a href="/settings" class="quick-action"><i data-lucide="settings-2"></i><span>Mở cài đặt</span></a></div>
+        </aside>
+      </div>
+
+      <section id="transactions" class="panel form-panel section-anchor">
+        <div class="section-head"><h2><i data-lucide="plus-circle"></i> Thêm khoản chi</h2><span class="form-hint">Nhấn Enter để lưu nhanh</span></div>
         <form id="expense-form">
           <input type="hidden" name="id" id="expense-id" />
           <div class="form-grid">
             <label>
-              Số tiền
+              <span><i data-lucide="banknote"></i> Số tiền</span>
               <input type="number" name="amount" min="0" step="0.01" required />
             </label>
             <label>
-              Danh mục
+              <span><i data-lucide="tag"></i> Danh mục</span>
               <input type="text" name="category" placeholder="Ví dụ: Ăn uống" required />
             </label>
             <label>
-              Ngày
+              <span><i data-lucide="calendar-days"></i> Ngày</span>
               <input type="date" name="expense_date" required />
             </label>
+            <label>
+              <span><i data-lucide="wallet"></i> Tiền tệ</span>
+              <select name="currency" id="expense-currency">
+                <option value="VND">VND</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="JPY">JPY</option>
+              </select>
+            </label>
           </div>
-          <label>
-            Mô tả
+          <label class="full-field">
+            <span><i data-lucide="align-left"></i> Mô tả</span>
             <input type="text" name="description" placeholder="Mô tả chi tiết" required />
           </label>
+          <div class="form-grid">
+            <label>
+              <span><i data-lucide="tags"></i> Thẻ</span>
+              <input type="text" name="tags" id="expense-tags" placeholder="Ví dụ: ăn uống, gia đình" />
+            </label>
+            <label>
+              <span><i data-lucide="repeat"></i> Lặp lại</span>
+              <div class="inline-toggle">
+                <input type="checkbox" name="is_recurring" id="expense-recurring" />
+                <select name="recurring_frequency" id="expense-recurring-frequency">
+                  <option value="daily">Hằng ngày</option>
+                  <option value="weekly">Hằng tuần</option>
+                  <option value="monthly" selected>Hằng tháng</option>
+                  <option value="yearly">Hằng năm</option>
+                </select>
+              </div>
+            </label>
+          </div>
           <div class="form-actions">
             <button type="submit" class="primary" id="submit-btn">Lưu chi tiêu</button>
             <button type="button" class="secondary" id="cancel-edit" hidden>Huỷ sửa</button>
@@ -104,7 +123,7 @@
         <p id="form-status" class="status" aria-live="polite"></p>
       </section>
 
-      <section class="panel ai-panel">
+      <section id="ai-tools" class="panel ai-panel section-anchor">
         <div class="section-head"><div><p class="eyebrow">AI hỗ trợ</p><h2>Nhập từ ảnh hóa đơn</h2></div><span class="review-badge">Luôn cần duyệt</span></div>
         <p class="muted-copy">Ảnh và đề xuất được lưu riêng. Chỉ nút Duyệt mới tạo giao dịch.</p>
         <div class="ai-controls">
@@ -116,7 +135,7 @@
         <div class="llm-box"><label for="llm-prompt">Trợ lý LLM</label><textarea id="llm-prompt" rows="3" maxlength="4000" placeholder="Hỏi về cách phân loại hoặc lập kế hoạch chi tiêu"></textarea><button id="llm-btn" class="secondary">Gửi cho LLM</button><pre id="llm-result" class="llm-result"></pre></div>
       </section>
 
-      <section class="panel">
+      <section id="transactions-list" class="panel section-anchor">
         <div class="section-head"><h2>Danh sách chi tiêu</h2></div>
         <div class="filters">
           <input id="filter-keyword" type="search" placeholder="Tìm mô tả hoặc danh mục" />
@@ -132,13 +151,14 @@
                 <th>Ngày</th>
                 <th>Danh mục</th>
                 <th>Mô tả</th>
+                <th>Thẻ</th>
                 <th>Số tiền</th>
                 <th>Thao tác</th>
               </tr>
             </thead>
             <tbody id="expense-list">
               <tr>
-                <td colspan="5" class="empty">Đang tải dữ liệu...</td>
+                <td colspan="6" class="empty loading-state"><span class="skeleton-line"></span><span class="skeleton-line short"></span><span class="skeleton-line"></span></td>
               </tr>
             </tbody>
           </table>
@@ -150,5 +170,7 @@
         <div class="table-wrap"><table><thead><tr><th>ID</th><th>Tài khoản</th><th>Vai trò</th><th>Thao tác</th></tr></thead><tbody id="user-list"></tbody></table></div>
       </section>
     </main>
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+    <div id="expense-modal" class="modal-backdrop" hidden><div class="modal-card"><div class="section-head"><h2 id="modal-title">Xác nhận</h2><button id="modal-close" class="icon-button"><i data-lucide="x"></i></button></div><p id="modal-message"></p><div class="modal-actions"><button id="modal-cancel" class="secondary">Huỷ</button><button id="modal-confirm" class="danger-button">Xác nhận</button></div></div></div>
   </body>
 </html>

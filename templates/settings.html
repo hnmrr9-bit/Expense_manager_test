@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cài đặt | Quản lý tài chính cá nhân</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="/static/settings.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><span class="logo-mark" aria-hidden="true">$</span><span>Expense Manager</span></div>
+      <nav class="sidebar-nav" aria-label="Điều hướng chính">
+        <a class="nav-link" href="/"><i data-lucide="layout-dashboard"></i><span>Tổng quan</span></a>
+        <a class="nav-link" href="/#transactions"><i data-lucide="receipt-text"></i><span>Giao dịch</span></a>
+        <a class="nav-link" href="/#reports"><i data-lucide="chart-no-axes-combined"></i><span>Báo cáo</span></a>
+        <a class="nav-link" href="/#ai-tools"><i data-lucide="scan-line"></i><span>AI hỗ trợ</span></a>
+        <a class="nav-link active" href="/settings"><i data-lucide="settings-2"></i><span>Cài đặt</span></a>
+      </nav>
+      <div class="sidebar-user"><span class="sidebar-user-avatar" id="sidebar-avatar">D</span><div><strong id="sidebar-user-name">demo</strong><span>Tài khoản cá nhân</span></div><i data-lucide="chevron-right"></i></div>
+      <div class="sidebar-footer"><i data-lucide="shield-check"></i><span>Dữ liệu riêng tư</span></div>
+    </aside>
+
+    <main class="container app-shell settings-page">
+      <div class="mobile-topbar"><button id="sidebar-toggle" class="icon-button" aria-label="Mở menu"><i data-lucide="menu"></i></button><span>Expense Manager</span></div>
+      <header class="header settings-header">
+        <div>
+          <p class="eyebrow">Workspace settings</p>
+          <h1>Cài đặt</h1>
+          <p class="welcome-user">Quản lý tài khoản, giao diện và dữ liệu của bạn.</p>
+        </div>
+        <a href="/" class="secondary back-link"><i data-lucide="arrow-left"></i> Về tổng quan</a>
+      </header>
+
+      <section class="settings-page-grid">
+        <article class="settings-section panel">
+          <div class="settings-section-heading"><div class="settings-icon"><i data-lucide="user-round"></i></div><div><h2>Thông tin tài khoản</h2><p class="muted-copy">Thông tin phiên đăng nhập hiện tại.</p></div></div>
+          <div class="profile-card"><div class="profile-avatar" id="profile-avatar">D</div><div><strong id="profile-username">demo</strong><span id="profile-role">Tài khoản người dùng</span></div></div>
+          <div class="settings-actions"><button id="change-password-btn" class="secondary"><i data-lucide="key-round"></i> Đổi mật khẩu</button><button id="logout-btn" class="danger-button"><i data-lucide="log-out"></i> Đăng xuất tài khoản</button></div>
+          <form id="password-form" class="password-form" hidden><label>Mật khẩu hiện tại<input type="password" id="current-password" required /></label><label>Mật khẩu mới<input type="password" id="new-password" minlength="6" required /></label><label>Nhập lại mật khẩu mới<input type="password" id="confirm-password" minlength="6" required /></label><button class="primary" type="submit">Cập nhật mật khẩu</button></form>
+        </article>
+
+        <article class="settings-section panel">
+          <div class="settings-section-heading"><div class="settings-icon violet"><i data-lucide="palette"></i></div><div><h2>Giao diện & hiển thị</h2><p class="muted-copy">Chọn chế độ sáng hoặc tối cho ứng dụng.</p></div></div>
+          <div class="theme-choice-grid"><button class="theme-choice" data-theme="blue"><span class="theme-swatch blue"></span><span>Xanh tài chính</span></button><button class="theme-choice" data-theme="green"><span class="theme-swatch green"></span><span>Xanh lá</span></button><button class="theme-choice" data-theme="orange"><span class="theme-swatch orange"></span><span>Cam</span></button><button class="theme-choice" data-theme="violet"><span class="theme-swatch violet"></span><span>Tím</span></button><button class="theme-choice" data-theme="dark"><span class="theme-swatch dark"></span><span>Tối</span></button></div>
+          <label class="settings-select-label">Tiền tệ mặc định<select id="default-currency"><option value="VND">VND</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="JPY">JPY</option></select></label>
+          <button id="save-settings" class="primary"><i data-lucide="save"></i> Lưu hiển thị</button>
+        </article>
+
+        <article class="settings-section panel">
+          <div class="settings-section-heading"><div class="settings-icon green"><i data-lucide="target"></i></div><div><h2>Ngân sách</h2><p class="muted-copy">Đặt giới hạn tổng tháng và theo từng danh mục.</p></div></div>
+          <label class="settings-select-label">Ngân sách tổng tháng<input id="monthly-budget" type="number" min="0" step="100000" placeholder="Ví dụ: 10000000" /></label>
+          <button id="save-monthly-budget" class="secondary"><i data-lucide="save"></i> Lưu ngân sách tháng</button>
+          <div class="category-budget-settings">
+            <div class="category-budget-form"><input id="budget-category" type="text" placeholder="Danh mục" /><input id="budget-amount" type="number" min="0" step="1000" placeholder="Số tiền" /><select id="budget-currency"><option value="VND">VND</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="JPY">JPY</option></select><button id="save-category-budget" class="secondary">Lưu danh mục</button></div>
+            <ul id="category-budget-list" class="mini-list"></ul>
+          </div>
+        </article>
+
+        <article class="settings-section panel settings-section-wide">
+          <div class="settings-section-heading"><div class="settings-icon green"><i data-lucide="database"></i></div><div><h2>Quản lý dữ liệu</h2><p class="muted-copy">Xuất dữ liệu để lưu trữ hoặc khôi phục từ bản sao lưu.</p></div></div>
+          <div class="data-action-grid"><button id="export-json-btn" class="secondary"><i data-lucide="file-json"></i> Xuất JSON</button><button id="export-csv-btn" class="secondary"><i data-lucide="file-spreadsheet"></i> Xuất CSV</button><button id="export-pdf-btn" class="secondary"><i data-lucide="file-text"></i> Xuất PDF</button><button id="backup-btn" class="secondary"><i data-lucide="archive"></i> Sao lưu dữ liệu</button><label class="file-btn secondary"><i data-lucide="upload"></i> Nhập JSON<input id="import-input" type="file" accept="application/json" hidden /></label></div>
+          <p class="data-note"><i data-lucide="info"></i> File nhập sẽ được kiểm tra trước khi thêm vào tài khoản của bạn.</p>
+        </article>
+      </section>
+    </main>
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  </body>
+</html>
